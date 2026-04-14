@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'otp_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -13,7 +15,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -34,7 +35,6 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -43,23 +43,51 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_passwordController.text != _confirmPasswordController.text) {
-      _showError('Password dan Konfirmasi Password tidak cocok');
-      return;
-    }
-
     setState(() => _isLoading = true);
+    try {
+      // signUp akan otomatis kirim OTP ke email
+      // pastikan "Enable email confirmations" aktif di Supabase Dashboard
+      await Supabase.instance.client.auth.signUp(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+        data: {'full_name': _nameController.text.trim()},
+      );
 
-    // TODO: Ganti dengan logika register API kamu
-    await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
 
-    setState(() => _isLoading = false);
-
-    if (mounted) {
-      _showSuccess('Pendaftaran berhasil! Silakan login.');
-      await Future.delayed(const Duration(seconds: 2));
-      if (mounted) Navigator.pop(context);
+      // Pindah ke halaman OTP, kirim email + password
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OtpPage(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          ),
+        ),
+      );
+    } on AuthException catch (e) {
+      _showError(_translateAuthError(e.message));
+    } catch (e) {
+      _showError('Terjadi kesalahan. Coba lagi.');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  String _translateAuthError(String message) {
+    if (message.contains('already registered') ||
+        message.contains('User already registered')) {
+      return 'Email ini sudah terdaftar. Silakan login.';
+    } else if (message.contains('invalid email')) {
+      return 'Format email tidak valid.';
+    } else if (message.contains('weak password') ||
+        message.contains('Password should be')) {
+      return 'Password terlalu lemah. Minimal 6 karakter.';
+    } else if (message.contains('network') ||
+        message.contains('Unable to connect')) {
+      return 'Tidak ada koneksi internet.';
+    }
+    return 'Gagal: $message';
   }
 
   void _showError(String message) {
@@ -74,25 +102,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _showSuccess(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 10),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: const Color(0xFF1A6B6B),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-
-  // ✅ Popup info
   void _showInfoDialog() {
     showDialog(
       context: context,
@@ -113,22 +122,16 @@ class _RegisterPageState extends State<RegisterPage> {
           ],
         ),
         content: const Text(
-          'Daftarkan akun kamu untuk mulai perjalanan ibadah bersama MuslimNoob. Daftar menggunakan email yang valid dan buat password yang kuat untuk keamanan akun kamu. Setelah mendaftar, kamu bisa langsung login dan menikmati fitur-fitur yang kami sediakan untuk membantu ibadahmu lebih mudah dan menyenangkan.',
-          style: TextStyle(
-            color: Color(0xFF0D4A4A),
-            fontSize: 14,
-            height: 1.5,
-          ),
+          'Daftarkan akun kamu untuk mulai perjalanan ibadah bersama MuslimNoob. Setelah mendaftar, kamu akan menerima kode OTP 6 digit ke email untuk verifikasi akun.',
+          style: TextStyle(color: Color(0xFF0D4A4A), fontSize: 14, height: 1.5),
         ),
         actions: [
           FilledButton(
             onPressed: () => Navigator.pop(context),
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFF1A6B6B),
-              minimumSize: const Size(double.infinity, 48), // ← tambah ini
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: const Text('Mengerti'),
           ),
@@ -159,10 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
               borderRadius: BorderRadius.circular(50),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.5),
-                width: 1.2,
-              ),
+              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.2),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.08),
@@ -178,10 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 fontWeight: FontWeight.w500,
               ),
               child: IconTheme(
-                data: const IconThemeData(
-                  color: Color(0xFF0D4A4A),
-                  size: 16,
-                ),
+                data: const IconThemeData(color: Color(0xFF0D4A4A), size: 16),
                 child: child,
               ),
             ),
@@ -204,27 +201,20 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Button Kembali (kiri)
                   _buildGlassButton(
                     onPressed: () => Navigator.pop(context),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(Icons.arrow_back_ios_new, size: 16),
                         SizedBox(width: 6),
-                        Text(
-                          'Kembali',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w500),
-                        ),
+                        Text('Kembali',
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
                       ],
                     ),
                   ),
-
-                  // Button Info (kanan) ✅
                   _buildGlassButton(
-                    onPressed: () => _showInfoDialog(),
+                    onPressed: _showInfoDialog,
                     child: const Icon(Icons.info_outline, size: 20),
                   ),
                 ],
@@ -241,8 +231,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 14),
-
-                      // Title
                       const Text(
                         'Daftar',
                         style: TextStyle(
@@ -251,40 +239,38 @@ class _RegisterPageState extends State<RegisterPage> {
                           color: Color(0xFF0D4A4A),
                         ),
                       ),
-                      const SizedBox(height: 14),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Kode OTP akan dikirim ke email kamu',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                      ),
+                      const SizedBox(height: 20),
 
-                      // Nama Lengkap
                       _buildTextField(
                         controller: _nameController,
                         hint: 'Nama Lengkap',
                         capitalization: TextCapitalization.words,
                         validator: (val) {
-                          if (val == null || val.isEmpty)
-                            return 'Nama tidak boleh kosong';
-                          if (val.trim().length < 3)
-                            return 'Nama minimal 3 karakter';
+                          if (val == null || val.isEmpty) return 'Nama tidak boleh kosong';
+                          if (val.trim().length < 3) return 'Nama minimal 3 karakter';
                           return null;
                         },
                       ),
                       const SizedBox(height: 14),
 
-                      // Email
                       _buildTextField(
                         controller: _emailController,
                         hint: 'Email',
                         keyboardType: TextInputType.emailAddress,
                         validator: (val) {
-                          if (val == null || val.isEmpty)
-                            return 'Email tidak boleh kosong';
-                          if (!RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$')
-                              .hasMatch(val.trim()))
+                          if (val == null || val.isEmpty) return 'Email tidak boleh kosong';
+                          if (!RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$').hasMatch(val.trim()))
                             return 'Format email tidak valid';
                           return null;
                         },
                       ),
                       const SizedBox(height: 14),
 
-                      // Password
                       _buildTextField(
                         controller: _passwordController,
                         hint: 'Password',
@@ -297,20 +283,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: const Color(0xFF1A6B6B),
                             size: 20,
                           ),
-                          onPressed: () => setState(
-                              () => _obscurePassword = !_obscurePassword),
+                          onPressed: () =>
+                              setState(() => _obscurePassword = !_obscurePassword),
                         ),
                         validator: (val) {
-                          if (val == null || val.isEmpty)
-                            return 'Password tidak boleh kosong';
-                          if (val.length < 6)
-                            return 'Password minimal 6 karakter';
+                          if (val == null || val.isEmpty) return 'Password tidak boleh kosong';
+                          if (val.length < 6) return 'Password minimal 6 karakter';
                           return null;
                         },
                       ),
                       const SizedBox(height: 14),
 
-                      // Konfirmasi Password
                       _buildTextField(
                         controller: _confirmPasswordController,
                         hint: 'Konfirmasi Password',
@@ -323,21 +306,18 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: const Color(0xFF1A6B6B),
                             size: 20,
                           ),
-                          onPressed: () => setState(() =>
-                              _obscureConfirmPassword =
-                                  !_obscureConfirmPassword),
+                          onPressed: () => setState(
+                              () => _obscureConfirmPassword = !_obscureConfirmPassword),
                         ),
                         validator: (val) {
                           if (val == null || val.isEmpty)
                             return 'Konfirmasi password tidak boleh kosong';
-                          if (val != _passwordController.text)
-                            return 'Password tidak cocok';
+                          if (val != _passwordController.text) return 'Password tidak cocok';
                           return null;
                         },
                       ),
                       const SizedBox(height: 28),
 
-                      // Daftar Button
                       SizedBox(
                         width: double.infinity,
                         height: 52,
@@ -347,8 +327,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             backgroundColor: const Color(0xFF1A6B6B),
                             disabledBackgroundColor: Colors.grey[300],
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                                borderRadius: BorderRadius.circular(12)),
                             elevation: 0,
                           ),
                           child: _isLoading
@@ -356,34 +335,26 @@ class _RegisterPageState extends State<RegisterPage> {
                                   width: 22,
                                   height: 22,
                                   child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
+                                      color: Colors.white, strokeWidth: 2),
                                 )
                               : const Text(
-                                  'Daftar',
+                                  'Daftar & Kirim OTP',
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
                                 ),
                         ),
                       ),
                       const SizedBox(height: 18),
 
-                      // Login Link
                       Center(
                         child: GestureDetector(
-                          onTap:
-                              _isLoading ? null : () => Navigator.pop(context),
+                          onTap: _isLoading ? null : () => Navigator.pop(context),
                           child: RichText(
                             text: TextSpan(
                               text: 'Sudah memiliki Akun? ',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 14,
-                              ),
+                              style: TextStyle(color: Colors.grey[600], fontSize: 14),
                               children: [
                                 TextSpan(
                                   text: 'Login',
@@ -435,8 +406,7 @@ class _RegisterPageState extends State<RegisterPage> {
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

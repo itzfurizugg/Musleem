@@ -4,6 +4,7 @@ import '../services/prayer_service.dart';
 import 'city_picker_screen.dart';
 import 'prayer_schedule_screen.dart';
 import 'qibla_screen.dart';
+import 'profile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        backgroundColor: Color(0xFF1B5E20),
+        backgroundColor: Color(0xFF1A6B6B),
         body: Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
@@ -66,33 +67,58 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Widget> tabs = [
       PrayerScheduleScreen(city: _selectedCity!, isTab: true),
       const QiblaScreen(),
+      const Scaffold(body: Center(child: Text('Doa & Dzikir - Coming Soon'))),
+      const ProfileScreen(),
     ];
 
     return Scaffold(
+      extendBody: true,
       body: IndexedStack(index: _currentIndex, children: tabs),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        selectedItemColor: const Color(0xFF1B5E20),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.access_time),
-            label: 'Jadwal',
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.12),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (index) => setState(() => _currentIndex = index),
+              selectedItemColor: const Color(0xFF1A6B6B),
+              unselectedItemColor: Colors.grey,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              type: BottomNavigationBarType.fixed,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_filled),
+                  label: 'Beranda',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.explore),
+                  label: 'Kiblat',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.book),
+                  label: 'Doa dan Dzikir',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profil',
+                ),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Kiblat'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Doa dan Dzikir'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil'
-          ),
-        ],
+        ),
       ),
     );
   }

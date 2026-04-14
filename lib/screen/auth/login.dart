@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'register.dart';
 import '../home.dart';
 
@@ -25,10 +26,12 @@ class _LoginPageState extends State<LoginPage>
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
 
     _animController = AnimationController(
       vsync: this,
@@ -38,9 +41,10 @@ class _LoginPageState extends State<LoginPage>
       begin: const Offset(0, 0.15),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
-    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeIn),
-    );
+    _fadeAnim = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeIn));
     _animController.forward();
   }
 
@@ -56,12 +60,21 @@ class _LoginPageState extends State<LoginPage>
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
 
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
 
-    setState(() => _isLoading = false);
-
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/home');
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } on AuthException catch (e) {
+      _showError(e.message);
+    } catch (e) {
+      _showError('Terjadi kesalahan. Silakan coba lagi.');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -108,8 +121,11 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
                 child: const Center(
-                  child: Icon(Icons.image_outlined,
-                      size: 80, color: Colors.white24),
+                  child: Icon(
+                    Icons.image_outlined,
+                    size: 80,
+                    color: Colors.white24,
+                  ),
                 ),
               ),
             ),
@@ -129,9 +145,7 @@ class _LoginPageState extends State<LoginPage>
               child: SlideTransition(
                 position: _slideAnim,
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF5F0E8),
-                  ),
+                  decoration: const BoxDecoration(color: Color(0xFFF5F0E8)),
                   child: SingleChildScrollView(
                     padding: EdgeInsets.fromLTRB(
                       24,
@@ -194,7 +208,8 @@ class _LoginPageState extends State<LoginPage>
                                 size: 20,
                               ),
                               onPressed: () => setState(
-                                  () => _obscurePassword = !_obscurePassword),
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
                             ),
                             validator: (val) {
                               if (val == null || val.isEmpty)
@@ -205,7 +220,6 @@ class _LoginPageState extends State<LoginPage>
                             },
                           ),
                           const SizedBox(height: 40), // ← jarak lebih jauh
-
                           // Login Button
                           SizedBox(
                             width: double.infinity,
@@ -240,18 +254,17 @@ class _LoginPageState extends State<LoginPage>
                             ),
                           ),
                           const SizedBox(height: 24), // ← jarak lebih jauh
-
                           // Daftar Link
                           Center(
                             child: GestureDetector(
                               onTap: _isLoading
                                   ? null
                                   : () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const RegisterPage()),
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const RegisterPage(),
                                       ),
+                                    ),
                               child: RichText(
                                 text: const TextSpan(
                                   text: 'Tidak memiliki Akun? ',
@@ -308,8 +321,10 @@ class _LoginPageState extends State<LoginPage>
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 14,
+          horizontal: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

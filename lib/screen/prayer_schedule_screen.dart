@@ -86,7 +86,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('Jadwal Sholat'),
-        backgroundColor: const Color(0xFF1B5E20),
+        backgroundColor: const Color(0xFF1A6B6B),
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -177,7 +177,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF1B5E20), Color(0xFF388E3C)],
+                  colors: [Color(0xFF1A6B6B), Color(0xFF388E3C)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -224,7 +224,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B5E20),
+                color: Color(0xFF1A6B6B),
               ),
             ),
             const SizedBox(height: 12),
@@ -269,14 +269,14 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isSubuhOrIsya
-                  ? const Color(0xFF1B5E20).withOpacity(0.1)
+                  ? const Color(0xFF1A6B6B).withOpacity(0.1)
                   : const Color(0xFFFFF9C4),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               icon,
               color: isSubuhOrIsya
-                  ? const Color(0xFF1B5E20)
+                  ? const Color(0xFF1A6B6B)
                   : const Color(0xFFF9A825),
               size: 24,
             ),
@@ -292,7 +292,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1B5E20),
+              color: Color(0xFF1A6B6B),
             ),
           ),
         ],

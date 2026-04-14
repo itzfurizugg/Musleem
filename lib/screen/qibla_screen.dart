@@ -93,7 +93,6 @@ class _QiblaScreenState extends State<QiblaScreen> {
     }
   }
 
-  // ✅ Fungsi getar
   Future<void> _vibrateQibla() async {
     final hasVibrator = await Vibration.hasVibrator() ?? false;
     if (!hasVibrator) return;
@@ -108,13 +107,11 @@ class _QiblaScreenState extends State<QiblaScreen> {
       Vibration.vibrate(pattern: [0, 100, 80, 100, 80, 200]);
     }
   }
-git 
+
   void _startCompass() {
     FlutterCompass.events?.listen((event) {
       if (event.heading != null && mounted) {
         setState(() => _compassHeading = event.heading!);
-
-        // ✅ Cek perubahan arah kiblat dan getar jika baru mengarah
         final nowPointing = _isPointingQibla;
         if (nowPointing && !_wasPointingQibla) {
           _vibrateQibla();

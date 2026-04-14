@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'city_picker_screen.dart';
-import 'prayer_schedule_screen.dart';
-import '../services/prayer_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'auth/login.dart';
+import 'home.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -47,37 +46,20 @@ class _SplashScreenState extends State<SplashScreen>
 
     Future.delayed(const Duration(seconds: 2), () async {
       if (mounted) {
-        final prefs = await SharedPreferences.getInstance();
-        final cityId = prefs.getInt('selected_city_id');
-        final cityName = prefs.getString('selected_city_name');
-
         _controller.reverse().then((_) {
-          if (mounted) {
-            if (cityId != null && cityName != null) {
-              // Jika sudah ada kota yang dipilih, langsung ke Jadwal Sholat
-              // Kita buat objek City minimal karena screen hanya butuh id & name & province
-              // Province dan Timezone bisa kita ambil dari prefs juga jika kita simpan tadi
-              final city = City(
-                id: cityId,
-                name: cityName,
-                province: prefs.getString('selected_city_province') ?? '',
-                timezone:
-                    prefs.getString('selected_city_timezone') ?? 'Asia/Jakarta',
-              );
-
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => PrayerScheduleScreen(city: city),
-                ),
-              );
-            } else {
-              // Jika belum ada, ke pilih kota
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const CityPickerScreen()),
-              );
-            }
+          if (!mounted) return;
+          // Cek session Supabase — jika sudah login, langsung ke HomeScreen
+          final session = Supabase.instance.client.auth.currentSession;
+          if (session != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginPage()),
+            );
           }
         });
       }
