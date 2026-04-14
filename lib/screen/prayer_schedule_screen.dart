@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/prayer_service.dart';
+import '../services/foreground_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'city_picker_screen.dart';
 
 class PrayerScheduleScreen extends StatefulWidget {
@@ -43,6 +45,11 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
         _schedule = schedule;
         _isLoading = false;
       });
+
+      if (schedule != null) {
+        _savePrayerTimes(schedule);
+        ForegroundService.start();
+      }
     } catch (e) {
       setState(() {
         _errorMessage = 'Gagal memuat jadwal: $e';
@@ -78,6 +85,15 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
       'Minggu',
     ];
     return '${days[date.weekday]}, ${date.day} ${months[date.month]} ${date.year}';
+  }
+
+  Future<void> _savePrayerTimes(PrayerSchedule s) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('prayer_subuh', s.subuh);
+    await prefs.setString('prayer_dzuhur', s.dzuhur);
+    await prefs.setString('prayer_ashar', s.ashar);
+    await prefs.setString('prayer_maghrib', s.maghrib);
+    await prefs.setString('prayer_isya', s.isya);
   }
 
   @override
