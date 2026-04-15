@@ -43,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _isLoading = false;
       });
     } else {
-      // Belum pilih kota, ke halaman pilih kota
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -57,8 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        backgroundColor: Color(0xFF1A6B6B),
-        body: Center(child: CircularProgressIndicator(color: Colors.white)),
+        backgroundColor: Color(0xFFF5F0E8),
+        body: Center(
+          child: CircularProgressIndicator(color: Color(0xFF1A6B6B)),
+        ),
       );
     }
 
@@ -67,58 +68,35 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Widget> tabs = [
       PrayerScheduleScreen(city: _selectedCity!, isTab: true),
       const QiblaScreen(),
-      const Scaffold(body: Center(child: Text('Doa & Dzikir - Coming Soon'))),
+      const Scaffold(
+        backgroundColor: Color(0xFFF5F0E8),
+        body: Center(child: Text('Doa & Dzikir - Coming Soon')),
+      ),
       const ProfileScreen(),
     ];
 
     return Scaffold(
-      extendBody: true,
       body: IndexedStack(index: _currentIndex, children: tabs),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) => setState(() => _currentIndex = index),
-              selectedItemColor: const Color(0xFF1A6B6B),
-              unselectedItemColor: Colors.grey,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              type: BottomNavigationBarType.fixed,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_filled),
-                  label: 'Beranda',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.explore),
-                  label: 'Kiblat',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.book),
-                  label: 'Doa dan Dzikir',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profil',
-                ),
-              ],
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        selectedItemColor: const Color(0xFF1A6B6B),
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.white,
+        elevation: 8,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'Beranda',
           ),
-        ),
+          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Kiblat'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Doa dan Dzikir',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+        ],
       ),
     );
   }

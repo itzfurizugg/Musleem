@@ -141,10 +141,10 @@ class _QiblaScreenState extends State<QiblaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF5F0E8),
       appBar: AppBar(
         title: const Text('Arah Kiblat'),
-        backgroundColor: const Color(0xFF1B5E20),
+        backgroundColor: const Color(0xFF1A6B6B),
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -181,7 +181,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
               icon: const Icon(Icons.refresh),
               label: const Text('Coba Lagi'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1B5E20),
+                backgroundColor: const Color(0xFF1A6B6B),
                 foregroundColor: Colors.white,
               ),
             ),
@@ -237,7 +237,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
                           style: const TextStyle(
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1B5E20),
+                            color: Color(0xFF1A6B6B),
                           ),
                         ),
                         const TextSpan(
@@ -245,7 +245,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1B5E20),
+                            color: Color(0xFF1A6B6B),
                           ),
                         ),
                       ],
@@ -262,14 +262,14 @@ class _QiblaScreenState extends State<QiblaScreen> {
           const SizedBox(height: 12),
           Row(
             children: [
-              const Icon(Icons.location_on, color: Color(0xFF1B5E20), size: 16),
+              const Icon(Icons.location_on, color: Color(0xFF1A6B6B), size: 16),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   _locationName,
                   style: const TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF1B5E20),
+                    color: Color(0xFF1A6B6B),
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -300,12 +300,12 @@ class _QiblaScreenState extends State<QiblaScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1B5E20).withOpacity(0.1),
+                  color: const Color(0xFF1A6B6B).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.explore,
-                  color: Color(0xFF1B5E20),
+                  color: Color(0xFF1A6B6B),
                   size: 18,
                 ),
               ),
@@ -368,8 +368,8 @@ class _QiblaScreenState extends State<QiblaScreen> {
                         gradient: LinearGradient(
                           colors: _isPointingQibla
                               ? [
-                                  const Color(0xFF4CAF50),
-                                  const Color(0xFF1B5E20),
+                                  const Color(0xFF1A6B6B),
+                                  const Color(0xFF0D4A4A),
                                 ]
                               : [Colors.grey.shade700, Colors.grey.shade900],
                           begin: Alignment.topLeft,
@@ -399,7 +399,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _isPointingQibla ? const Color(0xFF1B5E20) : Colors.white,
+        color: _isPointingQibla ? const Color(0xFF003231) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
@@ -413,12 +413,12 @@ class _QiblaScreenState extends State<QiblaScreen> {
             decoration: BoxDecoration(
               color: _isPointingQibla
                   ? Colors.white.withOpacity(0.2)
-                  : const Color(0xFF1B5E20).withOpacity(0.1),
+                  : const Color(0xFF1A6B6B).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               Icons.mosque,
-              color: _isPointingQibla ? Colors.white : const Color(0xFF1B5E20),
+              color: _isPointingQibla ? Colors.white : const Color(0xFF1A6B6B),
               size: 30,
             ),
           ),
@@ -428,9 +428,9 @@ class _QiblaScreenState extends State<QiblaScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _isPointingQibla ? '🕋 Menghadap Kiblat!' : 'Arah Kiblat',
+                  _isPointingQibla ? 'Menghadap Kiblat!' : 'Arah Kiblat',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: _isPointingQibla ? Colors.white : Colors.black87,
                   ),
@@ -458,7 +458,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
                   fontWeight: FontWeight.bold,
                   color: _isPointingQibla
                       ? Colors.white
-                      : const Color(0xFF1B5E20),
+                      : const Color(0xFF1A6B6B),
                 ),
               ),
               Text(
@@ -562,7 +562,7 @@ class _CompassLabels extends StatelessWidget {
           fontWeight: cardinal ? FontWeight.bold : FontWeight.w500,
           color: isNorth
               ? Colors.red.shade700
-              : (cardinal ? const Color(0xFF1B5E20) : Colors.grey.shade400),
+              : (cardinal ? const Color(0xFF1A6B6B) : Colors.grey.shade400),
         ),
       ),
     );
@@ -665,9 +665,9 @@ class _NeedlePainter extends CustomPainter {
     topPathLeft.close();
 
     final Color topColor1 = isPointing
-        ? const Color(0xFF4CAF50)
-        : const Color(0xFF2E7D32);
-    final Color topColor2 = const Color(0xFF1B5E20);
+        ? const Color(0xFF1A6B6B)
+        : const Color(0xFF0D4A4A);
+    final Color topColor2 = const Color(0xFF1A6B6B);
 
     paint.shader = LinearGradient(
       colors: [topColor1, topColor2],

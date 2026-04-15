@@ -99,7 +99,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF5F0E8),
       appBar: AppBar(
         title: const Text('Jadwal Sholat'),
         backgroundColor: const Color(0xFF1A6B6B),
@@ -193,7 +193,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF1A6B6B), Color(0xFF388E3C)],
+                  colors: [Color(0xFF1A6B6B), Color(0xFF0D4A4A)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),

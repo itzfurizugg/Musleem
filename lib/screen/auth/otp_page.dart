@@ -8,11 +8,7 @@ class OtpPage extends StatefulWidget {
   final String email;
   final String password;
 
-  const OtpPage({
-    super.key,
-    required this.email,
-    required this.password,
-  });
+  const OtpPage({super.key, required this.email, required this.password});
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -20,8 +16,10 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   // 6 controller untuk 6 kotak OTP
-  final List<TextEditingController> _controllers =
-      List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
 
   bool _isVerifying = false;
@@ -84,11 +82,7 @@ class _OtpPageState extends State<OtpPage> {
         _showSuccess('Email berhasil diverifikasi! 🎉');
         await Future.delayed(const Duration(milliseconds: 800));
         if (mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/home',
-            (route) => false,
-          );
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         }
       }
     } on AuthException catch (e) {
@@ -131,8 +125,7 @@ class _OtpPageState extends State<OtpPage> {
   }
 
   String _translateError(String message) {
-    if (message.contains('Token has expired') ||
-        message.contains('expired')) {
+    if (message.contains('Token has expired') || message.contains('expired')) {
       return 'Kode OTP sudah kadaluarsa. Minta kode baru.';
     } else if (message.contains('Invalid') || message.contains('invalid')) {
       return 'Kode OTP tidak valid. Periksa kembali.';
@@ -225,7 +218,10 @@ class _OtpPageState extends State<OtpPage> {
                 ],
               ),
               borderRadius: BorderRadius.circular(50),
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.2),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.5),
+                width: 1.2,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.08),
@@ -297,16 +293,13 @@ class _OtpPageState extends State<OtpPage> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: isFilled
-                    ? const Color(0xFF1A6B6B)
-                    : Colors.grey[300]!,
+                color: isFilled ? const Color(0xFF1A6B6B) : Colors.grey[300]!,
                 width: isFilled ? 1.5 : 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                  color: Color(0xFF1A6B6B), width: 2),
+              borderSide: const BorderSide(color: Color(0xFF1A6B6B), width: 2),
             ),
           ),
           onChanged: (value) {
@@ -323,7 +316,7 @@ class _OtpPageState extends State<OtpPage> {
     final allFilled = _otpCode.length == 6;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1ECE2),
+      backgroundColor: const Color(0xFFF5F0E8),
       body: SafeArea(
         child: Column(
           children: [
@@ -339,9 +332,13 @@ class _OtpPageState extends State<OtpPage> {
                       children: [
                         Icon(Icons.arrow_back_ios_new, size: 16),
                         SizedBox(width: 6),
-                        Text('Kembali',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w500)),
+                        Text(
+                          'Kembali',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -420,12 +417,15 @@ class _OtpPageState extends State<OtpPage> {
                       width: double.infinity,
                       height: 52,
                       child: ElevatedButton(
-                        onPressed: (_isVerifying || !allFilled) ? null : _verifyOtp,
+                        onPressed: (_isVerifying || !allFilled)
+                            ? null
+                            : _verifyOtp,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1A6B6B),
                           disabledBackgroundColor: Colors.grey[300],
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                           elevation: 0,
                         ),
                         child: _isVerifying
@@ -433,14 +433,17 @@ class _OtpPageState extends State<OtpPage> {
                                 width: 22,
                                 height: 22,
                                 child: CircularProgressIndicator(
-                                    color: Colors.white, strokeWidth: 2),
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Text(
                                 'Verifikasi',
                                 style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                       ),
                     ),
@@ -453,8 +456,9 @@ class _OtpPageState extends State<OtpPage> {
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Color(0xFF1A6B6B)),
+                                strokeWidth: 2,
+                                color: Color(0xFF1A6B6B),
+                              ),
                             )
                           : GestureDetector(
                               onTap: _resendCountdown == 0 ? _resendOtp : null,
@@ -462,7 +466,9 @@ class _OtpPageState extends State<OtpPage> {
                                 text: TextSpan(
                                   text: 'Tidak menerima kode? ',
                                   style: TextStyle(
-                                      color: Colors.grey[600], fontSize: 14),
+                                    color: Colors.grey[600],
+                                    fontSize: 14,
+                                  ),
                                   children: [
                                     TextSpan(
                                       text: _resendCountdown > 0

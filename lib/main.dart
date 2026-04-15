@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       title: 'MuslimNoob',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFF5F0E8),
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1A6B6B)),
         useMaterial3: true,
         fontFamily: 'sans-serif',

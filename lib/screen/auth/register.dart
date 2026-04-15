@@ -25,10 +25,12 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
   }
 
   @override
@@ -131,7 +133,9 @@ class _RegisterPageState extends State<RegisterPage> {
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFF1A6B6B),
               minimumSize: const Size(double.infinity, 48),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             child: const Text('Mengerti'),
           ),
@@ -162,7 +166,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
               borderRadius: BorderRadius.circular(50),
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.2),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.5),
+                width: 1.2,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.08),
@@ -191,7 +198,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF1ECE2),
+      backgroundColor: const Color(0xFFF5F0E8),
       body: SafeArea(
         child: Column(
           children: [
@@ -208,8 +215,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       children: [
                         Icon(Icons.arrow_back_ios_new, size: 16),
                         SizedBox(width: 6),
-                        Text('Kembali',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                        Text(
+                          'Kembali',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -251,8 +263,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         hint: 'Nama Lengkap',
                         capitalization: TextCapitalization.words,
                         validator: (val) {
-                          if (val == null || val.isEmpty) return 'Nama tidak boleh kosong';
-                          if (val.trim().length < 3) return 'Nama minimal 3 karakter';
+                          if (val == null || val.isEmpty)
+                            return 'Nama tidak boleh kosong';
+                          if (val.trim().length < 3)
+                            return 'Nama minimal 3 karakter';
                           return null;
                         },
                       ),
@@ -263,8 +277,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         hint: 'Email',
                         keyboardType: TextInputType.emailAddress,
                         validator: (val) {
-                          if (val == null || val.isEmpty) return 'Email tidak boleh kosong';
-                          if (!RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$').hasMatch(val.trim()))
+                          if (val == null || val.isEmpty)
+                            return 'Email tidak boleh kosong';
+                          if (!RegExp(
+                            r'^[\w\.-]+@[\w\.-]+\.\w+$',
+                          ).hasMatch(val.trim()))
                             return 'Format email tidak valid';
                           return null;
                         },
@@ -283,12 +300,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: const Color(0xFF1A6B6B),
                             size: 20,
                           ),
-                          onPressed: () =>
-                              setState(() => _obscurePassword = !_obscurePassword),
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                         validator: (val) {
-                          if (val == null || val.isEmpty) return 'Password tidak boleh kosong';
-                          if (val.length < 6) return 'Password minimal 6 karakter';
+                          if (val == null || val.isEmpty)
+                            return 'Password tidak boleh kosong';
+                          if (val.length < 6)
+                            return 'Password minimal 6 karakter';
                           return null;
                         },
                       ),
@@ -307,12 +327,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             size: 20,
                           ),
                           onPressed: () => setState(
-                              () => _obscureConfirmPassword = !_obscureConfirmPassword),
+                            () => _obscureConfirmPassword =
+                                !_obscureConfirmPassword,
+                          ),
                         ),
                         validator: (val) {
                           if (val == null || val.isEmpty)
                             return 'Konfirmasi password tidak boleh kosong';
-                          if (val != _passwordController.text) return 'Password tidak cocok';
+                          if (val != _passwordController.text)
+                            return 'Password tidak cocok';
                           return null;
                         },
                       ),
@@ -327,7 +350,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             backgroundColor: const Color(0xFF1A6B6B),
                             disabledBackgroundColor: Colors.grey[300],
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             elevation: 0,
                           ),
                           child: _isLoading
@@ -335,14 +359,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                   width: 22,
                                   height: 22,
                                   child: CircularProgressIndicator(
-                                      color: Colors.white, strokeWidth: 2),
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Text(
                                   'Daftar & Kirim OTP',
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
                         ),
                       ),
@@ -350,11 +377,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       Center(
                         child: GestureDetector(
-                          onTap: _isLoading ? null : () => Navigator.pop(context),
+                          onTap: _isLoading
+                              ? null
+                              : () => Navigator.pop(context),
                           child: RichText(
                             text: TextSpan(
                               text: 'Sudah memiliki Akun? ',
-                              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
                               children: [
                                 TextSpan(
                                   text: 'Login',
@@ -406,7 +438,10 @@ class _RegisterPageState extends State<RegisterPage> {
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 18,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

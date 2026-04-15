@@ -197,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ? _fullName![0].toUpperCase()
                                   : '?',
                               style: const TextStyle(
-                                fontSize: 32,
+                                fontSize: 48,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -209,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           _fullName ?? '',
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.9),
-                            fontSize: 16,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -78,9 +78,10 @@ class _CityPickerScreenState extends State<CityPickerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F0E8),
       appBar: AppBar(
         title: const Text('Pilih Kota'),
-        backgroundColor: const Color(0xFF1B5E20),
+        backgroundColor: const Color(0xFF1A6B6B),
         foregroundColor: Colors.white,
       ),
       body: Column(
@@ -114,7 +115,7 @@ class _CityPickerScreenState extends State<CityPickerScreen> {
                       final city = _filteredCities[index];
                       return ListTile(
                         leading: const CircleAvatar(
-                          backgroundColor: Color(0xFF1B5E20),
+                          backgroundColor: Color(0xFF1A6B6B),
                           child: Icon(
                             Icons.location_city,
                             color: Colors.white,
