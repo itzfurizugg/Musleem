@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/prayer_service.dart';
-import '../services/foreground_service.dart';
+// import '../services/foreground_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'city_picker_screen.dart';
 
@@ -48,7 +48,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
 
       if (schedule != null) {
         _savePrayerTimes(schedule);
-        ForegroundService.start();
+        // ForegroundService.start();
       }
     } catch (e) {
       setState(() {

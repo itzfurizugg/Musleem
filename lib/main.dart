@@ -6,8 +6,8 @@ import 'screen/auth/register.dart';
 import 'screen/home.dart';
 import 'screen/city_picker_screen.dart';
 import 'screen/prayer_schedule_screen.dart';
-import 'services/notification_service.dart';
-import 'services/foreground_service.dart';
+// import 'services/notification_service.dart';
+// import 'services/foreground_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +18,8 @@ Future<void> main() async {
   );
 
   // Initialize Services
-  await NotificationService().init();
-  ForegroundService.init();
+  // await NotificationService().init();
+  // ForegroundService.init();
 
   runApp(const MyApp());
 }
